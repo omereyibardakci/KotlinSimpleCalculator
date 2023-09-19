@@ -1,5 +1,7 @@
 package com.asus.kotlinsimplecalculator
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -12,6 +14,11 @@ var number1 : Int? = null
 var number2 : Int? = null
 var  result : Int? = null
 
+lateinit var sharedPreferences:SharedPreferences
+
+var finalNumberFromSharedPreferences : Int? = null
+
+
 
 
 class MainActivity : AppCompatActivity() {
@@ -22,8 +29,44 @@ class MainActivity : AppCompatActivity() {
         setContentView(view)
 
 
+
+
+        // sharedPreferences Initialize
+        sharedPreferences = this.getSharedPreferences("com.asus.kotlinsimplecalculator",
+            Context.MODE_PRIVATE)
+
+
+
+        finalNumberFromSharedPreferences = sharedPreferences.getInt("finalNumber",0)
+
+        if (finalNumberFromSharedPreferences!=0){
+            binding.textView.text="Result: ${finalNumberFromSharedPreferences}"
+
+        }else{
+            binding.textView.text="Result: ${777}"
+        }
+
+
         
     }
+
+
+
+    fun storingData(result: Int){
+        var finalNumber = result
+        if (finalNumber!=null){
+            binding.textView.text="Result: ${finalNumber}"
+            sharedPreferences.edit().putInt("finalNumber", finalNumber!!).apply()
+
+        }
+    }
+
+
+
+
+
+
+
 
 
     fun getNumber(){
@@ -69,11 +112,13 @@ class MainActivity : AppCompatActivity() {
         }else{
             result = number1!! + number2!!
             binding.textView.text="Result: ${result}"
-
+            storingData(result!!)
         }
 
 
     }
+
+
 
     fun Subraction(view: View){
 
@@ -87,6 +132,7 @@ class MainActivity : AppCompatActivity() {
         }else{
             result = number1!! - number2!!
             binding.textView.text="Result: ${result}"
+            storingData(result!!)
 
         }
 
@@ -104,6 +150,7 @@ class MainActivity : AppCompatActivity() {
         }else{
             result = number1!! * number2!!
             binding.textView.text="Result: ${result}"
+            storingData(result!!)
 
         }
 
@@ -121,6 +168,7 @@ class MainActivity : AppCompatActivity() {
         }else{
             var result = number1!! / number2!!
             binding.textView.text="Result: ${result}"
+
 
         }
     }
